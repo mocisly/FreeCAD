@@ -2276,6 +2276,34 @@ void Application::runApplication()
     MainWindow mw;
     mw.setProperty("QuitOnClosed", true);
 
+    {
+        ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath(
+            "User parameter:BaseApp/Preferences/MainWindow");
+        if (hGrp) {
+            std::string theme = hGrp->GetASCII("Theme", "").c_str();
+            if (theme == "FreeCAD Classic") {
+                mw.SetTitleBarColour(QColor(33, 33, 65), true);
+            }
+            else if (theme == "FreeCAD Dark") {
+                mw.SetTitleBarColour(QColor(00, 00, 00), true);
+            }
+            else if (theme == "FreeCAD Light") {
+                mw.SetTitleBarColour(QColor(255, 255, 255), true);
+            }
+            else {
+                if (mw.IsSystemDarkMode()) {
+                    mw.SetTitleBarColour(QColor(00, 00, 00), true);
+                }
+                else {
+                    mw.SetTitleBarColour(QColor(255, 255, 255), true);
+                }
+            }
+        }
+        else {
+            std::cerr << "Failed to get MainWindow parameter group." << std::endl;
+        }
+    }
+
 #ifdef FC_DEBUG  // redirect Coin messages to FreeCAD
     SoDebugError::setHandlerCallback(messageHandlerCoin, 0);
 #endif

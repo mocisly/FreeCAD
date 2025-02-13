@@ -56,7 +56,7 @@
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Gui/Application.h>
-
+#include <Gui/MainWindow.h>
 
 void PrintInitHelp();
 
@@ -94,6 +94,7 @@ private:
     Base::FileInfo fi;
     FILE* file;
 };
+
 
 int main(int argc, char** argv)
 {
@@ -151,8 +152,10 @@ int main(int argc, char** argv)
         argv_.push_back(0);  // 0-terminated string
     }
 
+    // 注释这行代码，让窗口标题栏颜色的显示要么读取配置要么跟随系统主题颜色
     // https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5
-    _putenv("QT_QPA_PLATFORM=windows:darkmode=1");
+    //_putenv("QT_QPA_PLATFORM=windows:darkmode=1");
+
 #endif
 
     // Name and Version of the Application
@@ -211,6 +214,7 @@ int main(int argc, char** argv)
         if (App::Application::Config()["RunMode"] == "Gui") {
             Base::Interpreter().replaceStdOutput();
         }
+
     }
     catch (const Base::UnknownProgramOption& e) {
         QApplication app(argc, argv);

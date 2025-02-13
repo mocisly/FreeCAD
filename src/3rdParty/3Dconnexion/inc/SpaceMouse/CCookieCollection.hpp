@@ -21,7 +21,7 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
-#if (!defined(_MSC_VER) || (_MSC_VER == 1943))
+#if (!defined(_MSC_VER) || (_MSC_VER >= 1943))
 #include <chrono>
 #endif
 #if (!defined(_MSC_VER) || (_MSC_VER > 1600))

@@ -124,6 +124,13 @@ FC_LOG_LEVEL_INIT("MainWindow",false,true,true)
 #define slots
 #endif
 
+#ifdef FC_OS_WIN32
+#include <windows.h>
+#include <shellapi.h>
+#include <dwmapi.h>
+#include <winuser.h>
+#endif
+
 using namespace Gui;
 using namespace Gui::DockWnd;
 using namespace std;
@@ -2637,6 +2644,60 @@ void MainWindow::setWindowTitle(const QString& string)
 
     QMainWindow::setWindowTitle(title);
 }
+
+void MainWindow::SetTitleBarColour(const QColor& colour, bool dark)
+{
+#if defined(FC_OS_WIN32)
+
+#if WINVER >= 0x0A00
+    HWND hwnd = (HWND)this->winId();
+
+    COLORREF col = RGB(colour.red(), colour.green(), colour.blue());
+
+    COLORREF CAPTION_COLOR = col;
+    COLORREF BORDER_COLOR = 0x201e1e;
+
+    DwmSetWindowAttribute(hwnd,
+                          34 /*DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR*/,
+                          &BORDER_COLOR,
+                          sizeof(BORDER_COLOR));
+    DwmSetWindowAttribute(hwnd,
+                          35 /*DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR*/,
+                          &CAPTION_COLOR,
+                          sizeof(CAPTION_COLOR));
+    SetWindowPos(hwnd, NULL, NULL, NULL, NULL, NULL, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOSIZE);
+#endif
+#endif
+}
+
+bool MainWindow::IsSystemDarkMode()
+{
+#if defined(FC_OS_WIN32)
+    // 注册表路径
+    const wchar_t* subKey = L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
+    const wchar_t* valueName = L"AppsUseLightTheme";
+
+    DWORD data = 0;
+    DWORD dataSize = sizeof(data);
+    HKEY hKey;
+
+    // 打开注册表键
+    if (RegOpenKeyExW(HKEY_CURRENT_USER, subKey, 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+        // 获取值
+        if (RegGetValueW(hKey, nullptr, valueName, RRF_RT_REG_DWORD, nullptr, &data, &dataSize)
+            == ERROR_SUCCESS) {
+            RegCloseKey(hKey);
+            return data == 0;  // 0 表示暗模式，1 表示亮模式
+        }
+        RegCloseKey(hKey);
+    }
+
+    return FALSE;  // 默认返回亮模式
+#endif
+}
+
+
+
 
     // ----------------------------------------------------------
 

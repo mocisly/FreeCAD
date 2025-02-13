@@ -36,6 +36,7 @@
 #include <App/Application.h>
 #include <Gui/Command.h>
 #include <Gui/PreferencePackManager.h>
+#include <Gui/MainWindow.h>
 
 #ifdef FC_OS_MACOSX
 #include <CoreFoundation/CoreFoundation.h>
@@ -202,6 +203,7 @@ void ThemeSelectorWidget::themeChanged(Theme newTheme)
 {
     // Run the appropriate preference pack:
     auto prefPackManager = Gui::Application::Instance->prefPackManager();
+    auto app = Gui::MainWindow::getInstance();
     switch (newTheme) {
         case Theme::Classic:
             prefPackManager->apply("FreeCAD Classic");
@@ -212,6 +214,15 @@ void ThemeSelectorWidget::themeChanged(Theme newTheme)
         case Theme::Light:
             prefPackManager->apply("FreeCAD Light");
             break;
+    }
+    if (newTheme == Theme::Classic) {
+        app->SetTitleBarColour(QColor(33, 33, 65), true);
+    }
+    else if(newTheme == Theme::Dark){
+        app->SetTitleBarColour(QColor(00, 00, 00), true);
+    }
+    else if (newTheme == Theme::Light){
+        app->SetTitleBarColour(QColor(255, 255, 255), true);
     }
     ParameterGrp::handle hGrp =
         App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Themes");

@@ -269,6 +269,8 @@ public Q_SLOTS:
 
     // Set main window title
     void setWindowTitle(const QString& string);
+    void SetTitleBarColour(const QColor& colour, bool dark = true);
+    bool IsSystemDarkMode();
 
 protected:
     /**

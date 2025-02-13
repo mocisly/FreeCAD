@@ -438,6 +438,17 @@ void DlgSettingsGeneral::saveThemes()
     bool tiledBackground = hGrp->GetBool("TiledBackground", false);
     Application::Instance->setStyleSheet(sheet, tiledBackground);
 
+    auto app = Gui::MainWindow::getInstance();
+    if (newTheme == "FreeCAD Classic") {
+        app->SetTitleBarColour(QColor(33, 33, 65), true);
+    }
+    else if (newTheme == "FreeCAD Dark") {
+        app->SetTitleBarColour(QColor(00, 00, 00), true);
+    }
+    else if (newTheme == "FreeCAD Light") {
+        app->SetTitleBarColour(QColor(255, 255, 255), true);
+    }
+
     themeChanged = false;
 }
 

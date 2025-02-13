@@ -1386,6 +1386,10 @@ endif()
 SET_BIN_DIR(FreeCADGui FreeCADGui)
 
 if(WIN32)
+    target_link_libraries(FreeCADGui Dwmapi)
+endif()
+
+if(WIN32)
     INSTALL(TARGETS FreeCADGui
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
