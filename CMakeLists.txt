@@ -25,7 +25,7 @@ if(FREECAD_USE_CCACHE)
     endif()
 endif()
 
-project(FreeCAD)
+project(FreeCAD_Fem)
 
 set(PACKAGE_VERSION_MAJOR "1")
 set(PACKAGE_VERSION_MINOR "0")
